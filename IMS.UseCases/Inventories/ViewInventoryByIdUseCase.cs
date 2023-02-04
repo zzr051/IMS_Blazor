@@ -7,7 +7,7 @@ using IMS.CoreBusiness;
 using IMS.UseCases.Interfaces;
 using IMS.UseCases.PluginInterfaces;
 
-namespace IMS.UseCases
+namespace IMS.UseCases.Inventories
 {
     public class ViewInventoryByIdUseCase : IViewInventoryByIdUseCase
     {
@@ -20,7 +20,7 @@ namespace IMS.UseCases
 
         public async Task<Inventory?> ExecuteAsync(int inventoryId)
         {
-            return await this._inventoryRepository.GetInventoryByIdAsync(inventoryId);
+            return await _inventoryRepository.GetInventoryByIdAsync(inventoryId);
         }
     }
 }

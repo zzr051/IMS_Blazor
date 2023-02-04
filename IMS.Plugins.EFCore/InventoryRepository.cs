@@ -28,12 +28,21 @@ namespace IMS.Plugins.EFCore
 
         public async Task AddInventoryAsync(Inventory inventory)
         {
+            //To prevent to add same inventory
+            if (_db.Inventories.Any(x =>
+                    x.InventoryName.Equals(inventory.InventoryName, StringComparison.OrdinalIgnoreCase))) return;
+
             await this._db.Inventories.AddAsync(inventory);
             await this._db.SaveChangesAsync();
         }
 
         public async Task UpdateInventoryAsync(Inventory inventory)
         {
+            //To prevent different inventories from having the same name
+            if (_db.Inventories.Any(x => x.InventoryId != inventory.InventoryId &&
+                                         x.InventoryName.Equals(inventory.InventoryName,
+                                             StringComparison.OrdinalIgnoreCase))) return;
+
             var inv = await this._db.Inventories.FindAsync(inventory.InventoryId);
             if (inv != null)
             {

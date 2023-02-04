@@ -4,7 +4,7 @@
     <input type="text"
            class="form-control form-control-lg"
            placeholder="Type inventory name here to search"
-           @bind-value="inventorNameToSearch"/>
+           @bind-value="inventoryNameToSearch"/>
     <button type="button" class="input-group-text btn-success"
             @onclick="@(async () => { await ViewInventories(); })">
         View
@@ -13,7 +13,7 @@
 
 
 @code {
-    private string? inventorNameToSearch;
+    private string? inventoryNameToSearch;
 
     [Parameter]
     public EventCallback<List<Inventory>> OnSearchInventories { get; set; }
@@ -21,7 +21,7 @@
     private async Task ViewInventories()
     {
         var inventories = (await ViewInventoriesByNameUseCase.
-            ExecuteAsync(inventorNameToSearch ?? string.Empty))?.ToList();
+            ExecuteAsync(inventoryNameToSearch ?? string.Empty))?.ToList();
 
         await OnSearchInventories.InvokeAsync(inventories);
     }
