@@ -1,6 +1,7 @@
 ﻿@page "/products"
 
 @inject IViewProductsByNameUseCase ViewProductsByNameUseCase
+@inject NavigationManager NavigationManager
 
 <h3>ProductList</h3>
 <br/>
@@ -27,6 +28,8 @@
         </tbody>
     </table>
 }
+<br/>
+<button type="button" class="btn btn-outline-primary" @onclick="AddProduct">Add Product</button>
 
 @code {
     private List<Product>? _productsList;
@@ -41,5 +44,9 @@
         _productsList = products;
     }
 
-}
+    private void AddProduct()
+    {
+        NavigationManager.NavigateTo("/addproduct");
+    }
 
+}

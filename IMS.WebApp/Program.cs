@@ -44,7 +44,9 @@ namespace IMS.WebApp
             builder.Services.AddTransient<IAddInventoryUseCase, AddInventoryUseCase>();
             builder.Services.AddTransient<IEditInventoryUseCase, EditInventoryUseCase>();
             builder.Services.AddTransient<IViewInventoryByIdUseCase, ViewInventoryByIdUseCase>();
+
             builder.Services.AddTransient<IViewProductsByNameUseCase, ViewProductsByNameUseCase>();
+            builder.Services.AddTransient<IAddProductUseCase, AddProductUseCase>();
 
             //DI repositories
             builder.Services.AddTransient<IInventoryRepository, InventoryRepository>();
