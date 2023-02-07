@@ -4,26 +4,59 @@
     <input type="text"
            class="form-control form-control-lg"
            placeholder="Type inventory name here to search"
-           @bind-value="inventoryNameToSearch"/>
+           @bind-value="_inventoryNameToSearch"/>
     <button type="button" class="input-group-text btn-success"
-            @onclick="@(async () => { await ViewInventories(); })">
+            @onclick="@(async () => await ViewInventories())">
         View
     </button>
 </div>
 
+@if (DisplaySearchResult && _inventories != null && _selectedInventory == null)
+{
+    <div style="overflow-y: auto; max-height: 300px">
+        <ul style="list-style-type: none">
+            @foreach (var inv in _inventories)
+            {
+                <li style="cursor: pointer"
+                    @onclick="@(async () => await SelectInventoryAsync(inv))"
+                    @key="inv.InventoryId">
+                    @inv.InventoryName
+                </li>
+            }
+        </ul>
+    </div>
+}
 
 @code {
-    private string? inventoryNameToSearch;
+    private List<Inventory>? _inventories;
+
+    private string? _inventoryNameToSearch;
+
+    private Inventory? _selectedInventory;
 
     [Parameter]
     public EventCallback<List<Inventory>> OnSearchInventories { get; set; }
 
+    [Parameter]
+    public EventCallback<Inventory> OnSelectInventory { get; set; }
+
+    [Parameter]
+    public bool DisplaySearchResult { get; set; } = false;
+
     private async Task ViewInventories()
     {
         var inventories = (await ViewInventoriesByNameUseCase.
-            ExecuteAsync(inventoryNameToSearch ?? string.Empty))?.ToList();
+            ExecuteAsync(_inventoryNameToSearch ?? string.Empty))?.ToList();
 
         await OnSearchInventories.InvokeAsync(inventories);
+        _inventories = inventories;
+        _selectedInventory = null;
+    }
+
+    private async Task SelectInventoryAsync(Inventory inventory)
+    {
+        await OnSelectInventory.InvokeAsync(inventory);
+        _selectedInventory = inventory;
     }
 
 }
