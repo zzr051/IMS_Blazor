@@ -35,23 +35,36 @@
 @code {
     private Product? _product;
 
+    //用于拿到组件实例
     private ProductInventoriesComponent _productInventoriesComponent = null!;
 
+    /// <summary>
+    /// 构造函数实例化要提交的Product
+    /// </summary>
     protected override void OnInitialized()
     {
         _product = new Product();
     }
 
+    /// <summary>
+    /// 执行完全初始化Product的操作，最终AddProduct
+    /// </summary>
+    /// <remarks>
+    /// 对Product的ProductInventories里的ProductId赋自己的ProductId构成完整的复合主键，
+    /// 并且填充Product的ProductInventories
+    /// </remarks>
     private async Task OnValidSubmit()
     {
         if (this._product != null)
         {
+            _productInventoriesComponent.ProductInventories.ForEach(x => x.ProductId = _product.ProductId);
+
+            _product.ProductInventories = _productInventoriesComponent.ProductInventories;
 
             await AddProductUseCase.ExecuteAsync(_product);
             NavigationManager.NavigateTo("/products");
+
+   
         }
     }
-
-
-
 }

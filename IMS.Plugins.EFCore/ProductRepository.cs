@@ -33,6 +33,22 @@ namespace IMS.Plugins.EFCore
 
             await this._db.Products.AddAsync(product);
             await this._db.SaveChangesAsync();
+
+            #region test是否真的完整的添加了product
+
+            //var prods = _db.Products.Include(p => p.ProductInventories)
+            //    .ThenInclude(pi => pi.Inventory).ToList();
+
+            //foreach (var pro in prods)
+            //{
+            //    Console.WriteLine($"产品是：{pro.ProductName}");
+            //    foreach (var item in pro.ProductInventories)
+            //    {
+            //        Console.WriteLine($"部件是：{item.Inventory.InventoryName}");
+            //    }
+            //}
+
+            #endregion
         }
     }
 }

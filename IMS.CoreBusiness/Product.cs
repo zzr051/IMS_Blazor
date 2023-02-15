@@ -16,7 +16,26 @@ namespace IMS.CoreBusiness
         [Range(0, int.MaxValue, ErrorMessage = "Quantity must be greater or equal to {0}")]
         public int Quantity { get; set; }
 
-        [Range(0,double.MaxValue,ErrorMessage = "price must be greater or equal to {0}")]
+        [Range(0, double.MaxValue, ErrorMessage = "price must be greater or equal to {0}")]
         public int Price { get; set; }
+
+        //construct many to many
+        public List<ProductInventory>? ProductInventories { get; set; }
+
+        public bool ValidatePricing()
+        {
+            if (ProductInventories == null || ProductInventories.Count <= 0)
+            {
+                return true;
+            }
+
+            double priceOfAllInvs = this.ProductInventories.Sum(x => x.Inventory?.Price ?? 0);
+            if (priceOfAllInvs < Price)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }
