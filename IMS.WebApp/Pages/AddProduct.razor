@@ -25,7 +25,7 @@
             <InputNumber id="price" class="form-control" @bind-Value="_product.Price"></InputNumber>
         </div>
 
-        <ProductInventoriesComponent @ref="_productInventoriesComponent"></ProductInventoriesComponent>
+        <ProductInventoriesComponent OnInventorySelected="OnInventorySelected" @ref="_productInventoriesComponent"></ProductInventoriesComponent>
         <br/>
         <button type="submit" class="btn btn-outline-primary">Submit</button>
 
@@ -63,8 +63,12 @@
 
             await AddProductUseCase.ExecuteAsync(_product);
             NavigationManager.NavigateTo("/products");
-
-   
         }
     }
+
+    private void OnInventorySelected(List<ProductInventory> productInventories)
+    {
+        this._product!.ProductInventories = productInventories; 
+    }
+
 }

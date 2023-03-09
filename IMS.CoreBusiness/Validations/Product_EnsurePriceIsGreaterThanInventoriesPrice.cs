@@ -7,7 +7,20 @@ using System.Threading.Tasks;
 
 namespace IMS.CoreBusiness.Validations
 {
-    public class Product_EnsurePriceIsGreaterThanInventoriesPrice:ValidationAttribute
+    public class Product_EnsurePriceIsGreaterThanInventoriesPrice : ValidationAttribute
     {
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        {
+            if (validationContext.ObjectInstance is Product product)
+            {
+                if (!product.ValidatePricing())
+                {
+                    return new ValidationResult(
+                        "The product's price is less than the summary of its inventories' price");
+                }
+            }
+
+            return ValidationResult.Success;
+        }
     }
 }

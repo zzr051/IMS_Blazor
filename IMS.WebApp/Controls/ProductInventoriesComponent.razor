@@ -23,8 +23,10 @@
                 </td>
 
                 <td>
-                    <input type="number" min="0" max="@proInv.Inventory?.Quantity"
-                           @bind-value="@proInv.InventoryQuantity"/>
+                    <input type="number" min="0"
+                           @bind-value="@proInv.InventoryQuantity"
+                           @bind-value:event="oninput"
+                           @onchange="OnInventoryQtyChanged"/>
                 </td>
 
                 <td>
@@ -42,14 +44,25 @@
 
 @code {
 
+    [Parameter]
+    public EventCallback<List<ProductInventory>> OnInventorySelected { get; set; }
+
     public List<ProductInventory> ProductInventories = new List<ProductInventory>();
 
-    private void OnSelectInventory(Inventory inventory)
+
+    private async Task OnInventoryQtyChanged()
+    {
+        await OnInventorySelected.InvokeAsync(this.ProductInventories);
+    }
+
+    private async Task OnSelectInventory(Inventory inventory)
     {
         if (!ProductInventories.Any(x => x.Inventory != null && x.Inventory.InventoryName.Equals(inventory.InventoryName, StringComparison.OrdinalIgnoreCase)))
         {
             ProductInventories.Add(new ProductInventory { InventoryId = inventory.InventoryId, Inventory = inventory });
         }
+
+        await OnInventorySelected.InvokeAsync(this.ProductInventories);
     }
 
     private void RemoveInventory(ProductInventory productInventory)
