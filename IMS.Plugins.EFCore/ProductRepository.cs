@@ -18,7 +18,7 @@ namespace IMS.Plugins.EFCore
             this._db = db;
         }
 
-        public async Task<List<Product>> GetProductsByName(string name = "")
+        public async Task<List<Product>> GetProductsByNameAsync(string name = "")
         {
             return await _db.Products.Where(p =>
                     p.ProductName.Contains(name, StringComparison.OrdinalIgnoreCase) || string.IsNullOrWhiteSpace(name))
@@ -49,6 +49,14 @@ namespace IMS.Plugins.EFCore
             //}
 
             #endregion
+        }
+
+        public async Task<Product> GetProductByIdAsync(int productId)
+        {
+            return await _db.Products
+                .Include(p => p.ProductInventories)
+                .ThenInclude(pr => pr.Inventory)
+                .FirstOrDefaultAsync(x => x.ProductId == productId);
         }
     }
 }

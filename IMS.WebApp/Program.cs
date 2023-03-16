@@ -34,7 +34,6 @@ namespace IMS.WebApp
             builder.Services
                 .AddScoped<AuthenticationStateProvider,
                     RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-            builder.Services.AddSingleton<WeatherForecastService>();
 
             //add DataContext
             builder.Services.AddDbContext<IMSContext>(options => { options.UseInMemoryDatabase("IMS"); });
@@ -47,6 +46,7 @@ namespace IMS.WebApp
 
             builder.Services.AddTransient<IViewProductsByNameUseCase, ViewProductsByNameUseCase>();
             builder.Services.AddTransient<IAddProductUseCase, AddProductUseCase>();
+            builder.Services.AddTransient<IViewProductByIdUseCase, ViewProductByIdUseCase>();
 
             //DI repositories
             builder.Services.AddTransient<IInventoryRepository, InventoryRepository>();

@@ -1,0 +1,60 @@
+﻿@page "/editproduct/{id:int}"
+
+@inject IViewProductByIdUseCase ViewProductByIdUseCase
+
+
+<h3>Edit Product</h3>
+<br/>
+@if (_product != null)
+{
+    <EditForm Model="_product" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary></ValidationSummary>
+
+        <div class="form-group">
+            <label for="name">Product Name</label>
+            <InputText id="name" class="form-control" @bind-Value="_product.ProductName"></InputText>
+        </div>
+
+        <div class="form-group">
+            <label for="qty">Quality</label>
+            <InputNumber id="qty" class="form-control" @bind-Value="_product.Quantity"></InputNumber>
+        </div>
+
+        <div class="form-group">
+            <label for="price">Price</label>
+            <InputNumber id="price" class="form-control" @bind-Value="_product.Price"></InputNumber>
+        </div>
+
+        <ProductInventoriesComponent
+            ProductInventories="_product.ProductInventories"
+            OnInventorySelected="OnInventorySelected">
+        </ProductInventoriesComponent>
+        <br/>
+        <button type="submit" class="btn btn-outline-primary">Save</button>
+
+    </EditForm>
+}
+
+@code {
+    private Product _product;
+
+    [Parameter]
+    public int Id { get; set; }
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _product = await ViewProductByIdUseCase.ExecuteAsync(this.Id);
+    }
+
+    private void OnInventorySelected(List<ProductInventory> productInventories)
+    {
+        this._product!.ProductInventories = productInventories;
+    }
+
+    private void OnValidSubmit()
+    {
+    }
+
+}

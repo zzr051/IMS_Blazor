@@ -16,7 +16,8 @@ namespace IMS.CoreBusiness.Validations
                 if (!product.ValidatePricing())
                 {
                     return new ValidationResult(
-                        "The product's price is less than the summary of its inventories' price");
+                        $"The product's price is less than the summary of its inventories' price:{product.TotalInventoryCost()}"
+                        , new[] { validationContext.MemberName });
                 }
             }
 

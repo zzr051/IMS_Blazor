@@ -36,7 +36,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _productsList = await ViewProductsByNameUseCase.ExecuteAsync();
+        var prods = await ViewProductsByNameUseCase.ExecuteAsync();
+        _productsList = prods.ToList();
     }
 
     private void OnSearchProducts(List<Product> products)

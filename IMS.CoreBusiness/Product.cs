@@ -17,24 +17,21 @@ namespace IMS.CoreBusiness
         [Range(0, int.MaxValue, ErrorMessage = "Quantity must be greater or equal to {0}")]
         public int Quantity { get; set; }
 
-
-        private int price;
-
         [Range(0, double.MaxValue, ErrorMessage = "price must be greater or equal to {0}")]
         [Product_EnsurePriceIsGreaterThanInventoriesPrice]
-        public int Price
-        {
-            get { return price; }
-            set
-            {
-                Console.WriteLine("hello");
-                price = value;
-            }
-        }
+        public int Price { get; set; }
 
 
         //construct many to many
         public List<ProductInventory>? ProductInventories { get; set; }
+
+
+        public double TotalInventoryCost()
+        {
+            double priceOfAllInvs = this.ProductInventories
+                .Sum(x => x.Inventory?.Price * x.InventoryQuantity ?? 0);
+            return priceOfAllInvs;
+        }
 
         public bool ValidatePricing()
         {
@@ -43,8 +40,7 @@ namespace IMS.CoreBusiness
                 return true;
             }
 
-            double priceOfAllInvs = this.ProductInventories.Sum(x => x.Inventory?.Price ?? 0);
-            if (priceOfAllInvs > Price)
+            if (TotalInventoryCost() > Price)
             {
                 return false;
             }
