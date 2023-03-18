@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using IMS.CoreBusiness;
 using IMS.UseCases.PluginInterfaces;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 namespace IMS.Plugins.EFCore
@@ -21,7 +22,9 @@ namespace IMS.Plugins.EFCore
         public async Task<List<Product>> GetProductsByNameAsync(string name = "")
         {
             return await _db.Products.Where(p =>
-                    p.ProductName.Contains(name, StringComparison.OrdinalIgnoreCase) || string.IsNullOrWhiteSpace(name))
+                    (p.ProductName.Contains(name, StringComparison.OrdinalIgnoreCase) ||
+                     string.IsNullOrWhiteSpace(name)) &&
+                    p.IsActive == true)
                 .ToListAsync();
         }
 
@@ -57,6 +60,39 @@ namespace IMS.Plugins.EFCore
                 .Include(p => p.ProductInventories)
                 .ThenInclude(pr => pr.Inventory)
                 .FirstOrDefaultAsync(x => x.ProductId == productId);
+        }
+
+        public async Task UpdateProductAsync(Product product)
+        {
+            var res = _db.Products.Any(x => x
+                .ProductName
+                .Equals(product.ProductName, StringComparison.OrdinalIgnoreCase));
+
+            if (res == true)
+            {
+                return;
+            }
+
+            var pro = await _db.Products.FindAsync(product.ProductId);
+            if (pro != null)
+            {
+                pro.ProductName = product.ProductName;
+                pro.Price = product.Price;
+                pro.Quantity = product.Quantity;
+                pro.ProductInventories = product.ProductInventories;
+                await _db.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteProductAsync(int productId)
+        {
+            //soft delete
+            var product = await _db.Products.FindAsync(productId);
+            if (product != null)
+            {
+                product.IsActive = false;
+                await _db.SaveChangesAsync();
+            }
         }
     }
 }

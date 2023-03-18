@@ -1,10 +1,11 @@
 ﻿@inject IViewInventoriesByNameUseCase ViewInventoriesByNameUseCase
 
-<div class="input-group mb-3">
+<div class="input-group">
     <input type="text"
            class="form-control form-control-lg"
            placeholder="Type inventory name here to search"
-           @bind-value="_inventoryNameToSearch"/>
+           @bind-value:event="oninput"
+           @bind-value="InventoryNameToSearch"/>
     <button type="button" class="input-group-text btn-success"
             @onclick="@(async () => await ViewInventories())">
         View
@@ -32,6 +33,19 @@
 
     private string? _inventoryNameToSearch;
 
+    public string? InventoryNameToSearch
+    {
+        get => _inventoryNameToSearch;
+        set
+        {
+            _inventoryNameToSearch = value;
+            if (!string.IsNullOrWhiteSpace(_inventoryNameToSearch) && _inventoryNameToSearch.Length > 2)
+            {
+                ViewInventories();
+            }
+        }
+    }
+
     private Inventory? _selectedInventory;
 
     [Parameter]
@@ -51,6 +65,8 @@
         await OnSearchInventories.InvokeAsync(inventories);
         _inventories = inventories;
         _selectedInventory = null;
+
+        StateHasChanged();
     }
 
     private async Task SelectInventoryAsync(Inventory inventory)

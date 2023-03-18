@@ -1,6 +1,6 @@
 ﻿using IMS.CoreBusiness;
 
-namespace IMS.UseCases.Inventories;
+namespace IMS.UseCases.Interfaces;
 
 public interface IViewProductsByNameUseCase
 {

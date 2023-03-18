@@ -7,20 +7,22 @@ using IMS.CoreBusiness;
 using IMS.UseCases.Interfaces;
 using IMS.UseCases.PluginInterfaces;
 
-namespace IMS.UseCases
+namespace IMS.UseCases.Products
 {
-    public class ViewProductByIdUseCase : IViewProductByIdUseCase
+    public class AddProductUseCase : IAddProductUseCase
     {
         private readonly IProductRepository _productRepository;
 
-        public ViewProductByIdUseCase(IProductRepository productRepository)
+        public AddProductUseCase(IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }
 
-        public async Task<Product> ExecuteAsync(int productId)
+        public async Task ExecuteAsync(Product? product)
         {
-            return await _productRepository.GetProductByIdAsync(productId);
+            if (product == null) return;
+
+            await _productRepository.AddProductAsync(product);
         }
     }
 }

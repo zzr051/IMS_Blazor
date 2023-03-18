@@ -1,7 +1,8 @@
 ﻿@page "/editproduct/{id:int}"
 
 @inject IViewProductByIdUseCase ViewProductByIdUseCase
-
+@inject IEditProductUseCase EditProductUseCase
+@inject NavigationManager NavigationManager
 
 <h3>Edit Product</h3>
 <br/>
@@ -53,8 +54,10 @@
         this._product!.ProductInventories = productInventories;
     }
 
-    private void OnValidSubmit()
+    private async Task OnValidSubmit()
     {
+        await EditProductUseCase.ExecuteAsync(_product);
+        NavigationManager.NavigateTo("/products");
     }
 
 }

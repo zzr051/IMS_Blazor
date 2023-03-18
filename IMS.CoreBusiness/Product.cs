@@ -25,6 +25,7 @@ namespace IMS.CoreBusiness
         //construct many to many
         public List<ProductInventory>? ProductInventories { get; set; }
 
+        public bool IsActive { get; set; } = true;
 
         public double TotalInventoryCost()
         {

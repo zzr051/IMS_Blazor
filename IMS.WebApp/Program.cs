@@ -1,8 +1,8 @@
 using IMS.Plugins.EFCore;
-using IMS.UseCases;
 using IMS.UseCases.Interfaces;
 using IMS.UseCases.Inventories;
 using IMS.UseCases.PluginInterfaces;
+using IMS.UseCases.Products;
 using IMS.WebApp.Areas.Identity;
 using IMS.WebApp.Data;
 using Microsoft.AspNetCore.Components;
@@ -47,6 +47,8 @@ namespace IMS.WebApp
             builder.Services.AddTransient<IViewProductsByNameUseCase, ViewProductsByNameUseCase>();
             builder.Services.AddTransient<IAddProductUseCase, AddProductUseCase>();
             builder.Services.AddTransient<IViewProductByIdUseCase, ViewProductByIdUseCase>();
+            builder.Services.AddTransient<IEditProductUseCase, EditProductUseCase>();
+            builder.Services.AddTransient<IDeleteProductUseCase, DeleteProductUseCase>();
 
             //DI repositories
             builder.Services.AddTransient<IInventoryRepository, InventoryRepository>();
