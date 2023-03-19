@@ -8,7 +8,7 @@ namespace IMS.CoreBusiness
 {
     public enum ProductTransactionType
     {
-        PurchaseInventory,
-        ProduceProduct
+        ProduceProduct = 1,
+        SellProduct = 2
     }
 }

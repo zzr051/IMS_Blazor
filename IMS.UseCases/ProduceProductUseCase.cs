@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IMS.CoreBusiness
+namespace IMS.UseCases
 {
-    public enum InventoryTransactionType
+    internal class ProduceProductUseCase
     {
-        PurchaseInventory = 1,
-        ProduceProduct = 2
     }
 }

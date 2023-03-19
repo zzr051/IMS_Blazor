@@ -1,4 +1,5 @@
 using IMS.Plugins.EFCore;
+using IMS.UseCases;
 using IMS.UseCases.Interfaces;
 using IMS.UseCases.Inventories;
 using IMS.UseCases.PluginInterfaces;
@@ -49,10 +50,13 @@ namespace IMS.WebApp
             builder.Services.AddTransient<IViewProductByIdUseCase, ViewProductByIdUseCase>();
             builder.Services.AddTransient<IEditProductUseCase, EditProductUseCase>();
             builder.Services.AddTransient<IDeleteProductUseCase, DeleteProductUseCase>();
+            builder.Services.AddTransient<IPurchaseInventoryUseCase, PurchaseInventoryUseCase>();
+
 
             //DI repositories
             builder.Services.AddTransient<IInventoryRepository, InventoryRepository>();
             builder.Services.AddTransient<IProductRepository, ProductRepository>();
+            builder.Services.AddTransient<IInventoryTransactionRepository, InventoryTransactionRepository>();
 
             var app = builder.Build();
 

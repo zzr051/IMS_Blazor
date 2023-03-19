@@ -1,6 +1,7 @@
 ﻿@page "/purchase"
 @using IMS.WebApp.ViewModels
-
+@using Humanizer.DateTimeHumanizeStrategy
+@inject IPurchaseInventoryUseCase PurchaseInventoryUseCase
 <h3>
     Purchase Inventory
 </h3>
@@ -37,7 +38,7 @@
             <InputNumber id="qty" @bind-Value="purchaseViewModel.QuantityToPurchase" class="form-control"/>
         </div>
         <br/>
-        <button type="submit" class="btn btn-outline-primary">Save</button>
+        <button type="submit" class="btn btn-outline-primary">Purchase</button>
     </EditForm>
 }
 
@@ -56,8 +57,16 @@
         purchaseViewModel.InventoryName = inventory.InventoryName;
     }
 
-    private void OnValidSubmit()
+    private async Task OnValidSubmit()
     {
+        await PurchaseInventoryUseCase.ExecuteAsync(
+            this.purchaseViewModel.PurchaseOrder,
+            this.selectedInventory,
+            this.purchaseViewModel.QuantityToPurchase,
+            "Fank"
+            );
+        //this.purchaseViewModel = new PurchaseViewModel();
+        //this.selectedInventory = null;
     }
 
 }

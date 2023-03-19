@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IMS.CoreBusiness;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace IMS.UseCases.PluginInterfaces
 {
     public interface IInventoryTransactionRepository
     {
-        Task ExecuteAsync(string poNumber, double price, int inventoryId, int quantity);
+        Task PurchaseAsync(string poNumber, Inventory inventory, int quantity, double price, string doneBy);
     }
 }
