@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using IMS.CoreBusiness;
 
 namespace IMS.UseCases.PluginInterfaces
 {
-    internal interface IProductTransactionRepository
+    public interface IProductTransactionRepository
     {
+        Task ProduceAsync(string productionNumber, Product product, int quantity, double price, string doneBy);
     }
 }

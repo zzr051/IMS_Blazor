@@ -22,6 +22,8 @@ namespace IMS.Plugins.EFCore
 
         public DbSet<InventoryTransaction> InventoryTransactions { get; set; }
 
+        public DbSet<ProductTransaction> ProductTransactions { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //build relationships 复合主键

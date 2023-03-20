@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
+using IProduceProductUseCase = IMS.UseCases.Interfaces.IProduceProductUseCase;
 
 namespace IMS.WebApp
 {
@@ -51,12 +52,16 @@ namespace IMS.WebApp
             builder.Services.AddTransient<IEditProductUseCase, EditProductUseCase>();
             builder.Services.AddTransient<IDeleteProductUseCase, DeleteProductUseCase>();
             builder.Services.AddTransient<IPurchaseInventoryUseCase, PurchaseInventoryUseCase>();
-
+            builder.Services
+                .AddTransient<IValidateEnoughInventoriesForProducingUseCase,
+                    ValidateEnoughInventoriesForProducingUseCase>();
+            builder.Services.AddTransient<IProduceProductUseCase, ProduceProductUseCase>();
 
             //DI repositories
             builder.Services.AddTransient<IInventoryRepository, InventoryRepository>();
             builder.Services.AddTransient<IProductRepository, ProductRepository>();
             builder.Services.AddTransient<IInventoryTransactionRepository, InventoryTransactionRepository>();
+            builder.Services.AddTransient<IProductTransactionRepository, ProductTransactionRepository>();
 
             var app = builder.Build();
 
