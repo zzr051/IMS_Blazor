@@ -28,7 +28,7 @@ namespace IMS.UseCases
             await _inventoryTransactionRepository.PurchaseAsync(poNumber, inventory, quantity, inventory.Price,
                 doneBy);
 
-            inventory.Quantity += quantity;
+            inventory.Quantity -= quantity;
             await _inventoryRepository.UpdateInventoryAsync(inventory);
         }
     }

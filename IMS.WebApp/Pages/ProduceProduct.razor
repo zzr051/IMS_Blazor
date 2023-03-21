@@ -1,0 +1,77 @@
+﻿@page "/produce"
+@inject IProduceProductUseCase ProduceProductUseCase
+@inject IValidateEnoughInventoriesForProducingUseCase ValidateEnoughInventoriesForProducingUseCase
+
+<ErrorMessageComponent ErrorMessage="@errorMessage"></ErrorMessageComponent>
+<h3>Produce Product</h3>
+@if (_produceViewModel != null)
+{
+    <EditForm Model="_produceViewModel" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary></ValidationSummary>
+
+        <div class="form-group">
+            <label for="po">Production Number</label>
+            <InputText id="po" @bind-Value="_produceViewModel.ProductionNumber" class="form-control"> </InputText>
+        </div>
+
+        <div class="form-group">
+            <label for="pro">Product to Produce</label>
+            <ViewProductsComponent DisplaySearchResult="true"
+                                   OnSelectProduct="OnSelectProduct">
+            </ViewProductsComponent>
+            <InputText id="pro" class="form-control" @bind-Value="_produceViewModel.ProductName" disabled></InputText>
+            <input type="hidden" value="@_produceViewModel?.ProductId"/>
+            @if (_selectedProduct != null)
+            {
+                <test>Price:</test>
+                @_selectedProduct?.Price.ToString("c")
+                ;
+            }
+        </div>
+
+        <div class="form-group">
+            <label for="qty">Quantity</label>
+            <InputNumber id="qty" @bind-Value="_produceViewModel.QuantityToProduce" class="form-control"/>
+        </div>
+        <br/>
+        <button type="submit" class="btn btn-outline-primary">Produce</button>
+    </EditForm>
+}
+
+@code {
+    private ProduceViewModel _produceViewModel = new ProduceViewModel();
+
+    private Product _selectedProduct;
+
+    private string errorMessage { get; set; }
+
+    private async Task OnValidSubmit()
+    {
+        var result = await ValidateEnoughInventoriesForProducingUseCase.ExecuteAsync(_selectedProduct, _produceViewModel.QuantityToProduce);
+
+        if (!result)
+        {
+            errorMessage = $"The inventories are not enough for producing the {_selectedProduct.ProductName} X {_produceViewModel.QuantityToProduce} times";
+            return;
+        }
+
+        await ProduceProductUseCase.ExecuteAsync(
+            _produceViewModel.ProductionNumber,
+            _selectedProduct,
+            _produceViewModel.QuantityToProduce,
+            "Fank"
+            );
+
+        _produceViewModel = new ProduceViewModel();
+        _selectedProduct = null;
+    }
+
+    public void OnSelectProduct(Product product)
+    {
+        this._selectedProduct = product;
+        _produceViewModel.ProductId = product.ProductId;
+        _produceViewModel.ProductName = product.ProductName;
+    }
+
+}
