@@ -62,6 +62,7 @@ namespace IMS.WebApp
             builder.Services.AddTransient<IProductRepository, ProductRepository>();
             builder.Services.AddTransient<IInventoryTransactionRepository, InventoryTransactionRepository>();
             builder.Services.AddTransient<IProductTransactionRepository, ProductTransactionRepository>();
+            builder.Services.AddTransient<ISellProductUseCase, SellProductUseCase>();
 
             var app = builder.Build();
 
