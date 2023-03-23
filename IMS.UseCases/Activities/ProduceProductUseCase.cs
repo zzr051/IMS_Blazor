@@ -7,7 +7,7 @@ using IMS.CoreBusiness;
 using IMS.UseCases.Interfaces;
 using IMS.UseCases.PluginInterfaces;
 
-namespace IMS.UseCases
+namespace IMS.UseCases.Activities
 {
     public class ProduceProductUseCase : IProduceProductUseCase
     {
@@ -29,11 +29,11 @@ namespace IMS.UseCases
         public async Task ExecuteAsync(string productionNumber, Product product, int quantity,
             string doneBy)
         {
-            await this._productTransactionRepository.ProduceAsync(productionNumber, product, quantity, product.Price,
+            await _productTransactionRepository.ProduceAsync(productionNumber, product, quantity, product.Price,
                 doneBy);
 
             product.Quantity += quantity;
-            await this._productRepository.UpdateProductAsync(product);
+            await _productRepository.UpdateProductAsync(product);
         }
     }
 }

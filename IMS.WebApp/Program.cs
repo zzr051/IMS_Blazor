@@ -1,9 +1,11 @@
 using IMS.Plugins.EFCore;
-using IMS.UseCases;
+using IMS.UseCases.Activities;
 using IMS.UseCases.Interfaces;
 using IMS.UseCases.Inventories;
 using IMS.UseCases.PluginInterfaces;
 using IMS.UseCases.Products;
+using IMS.UseCases.Reprots;
+using IMS.UseCases.Validations;
 using IMS.WebApp.Areas.Identity;
 using IMS.WebApp.Data;
 using Microsoft.AspNetCore.Components;
@@ -56,6 +58,8 @@ namespace IMS.WebApp
                 .AddTransient<IValidateEnoughInventoriesForProducingUseCase,
                     ValidateEnoughInventoriesForProducingUseCase>();
             builder.Services.AddTransient<IProduceProductUseCase, ProduceProductUseCase>();
+            builder.Services.AddTransient<ISearchInventoryTransactionUseCase ,SearchInventoryTransactionUseCase>();
+
 
             //DI repositories
             builder.Services.AddTransient<IInventoryRepository, InventoryRepository>();

@@ -7,7 +7,7 @@ using IMS.CoreBusiness;
 using IMS.UseCases.Interfaces;
 using IMS.UseCases.PluginInterfaces;
 
-namespace IMS.UseCases
+namespace IMS.UseCases.Activities
 {
     public class PurchaseInventoryUseCase : IPurchaseInventoryUseCase
     {
