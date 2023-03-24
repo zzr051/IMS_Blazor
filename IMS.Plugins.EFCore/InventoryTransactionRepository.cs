@@ -45,8 +45,8 @@ namespace IMS.Plugins.EFCore
                 join inv in _db.Inventories on it.InventoryId equals inv.InventoryId
                 where (string.IsNullOrWhiteSpace(inventoryName) ||
                        inv.InventoryName.Contains(inventoryName, StringComparison.OrdinalIgnoreCase)) &&
-                      (!dateForm.HasValue || it.TransactionDate >= dateForm) &&
-                      (!dateTo.HasValue || it.TransactionDate >= dateTo) &&
+                      (!dateForm.HasValue || it.TransactionDate >= dateForm.Value.Date) &&
+                      (!dateTo.HasValue || it.TransactionDate <= dateTo.Value.Date) &&
                       (!transactionType.HasValue || it.ActivityType == transactionType)
                 select it;
 

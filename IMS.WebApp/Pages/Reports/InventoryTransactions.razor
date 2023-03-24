@@ -1,5 +1,4 @@
-﻿@using System.Runtime.CompilerServices
-@page "/inventoryreport"
+﻿@page "/inventoryreport"
 @inject ISearchInventoryTransactionUseCase SearchInventoryTransactionUseCase
 
 <h3>Inventory Transaction</h3>
@@ -22,8 +21,9 @@
     <div class="col">
         <label for="at">Activity Type</label>
         <select id="at" class="form-control" @bind="activityTypeId">
-            <option id="1">Purchase Inventory</option>
-            <option id="2">Product Product</option>
+            <option value="0"></option>
+            <option value="1">Purchase Inventory</option>
+            <option value="2">Product Product</option>
         </select>
     </div>
 
@@ -39,7 +39,7 @@
         <thead>
         <tr>
             <th>Date</th>
-            <th>Inventory</th>
+            <th>Commodity</th>
             <th>Activity</th>
             <th>Qty Before</th>
             <th>Qty After</th>
@@ -77,17 +77,20 @@
 @code {
     private string invName;
 
-    private DateTime dateForm;
+    private DateTime? dateForm;
 
-    private DateTime dateTo;
+    private DateTime? dateTo;
 
-    private int activityTypeId;
+    private int? activityTypeId = 0;
 
     private IEnumerable<InventoryTransaction> inventoryTransactions;
 
     private async Task SearchInventories()
     {
-    //SearchInventoryTransactionUseCase.ExecuteAsync();
+        InventoryTransactionType? inventoryTransactionType = null;
+        if (activityTypeId != 0) inventoryTransactionType = (InventoryTransactionType)activityTypeId;
+
+        inventoryTransactions = await SearchInventoryTransactionUseCase.ExecuteAsync(invName, dateForm, dateTo, inventoryTransactionType);
     }
 
 }

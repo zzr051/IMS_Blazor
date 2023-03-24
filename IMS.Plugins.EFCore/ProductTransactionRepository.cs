@@ -24,17 +24,30 @@ namespace IMS.Plugins.EFCore
             string doneBy)
         {
             //refactor
-            //var prod = this._productRepository.GetProductByIdAsync(product.ProductId);
-            var prod = await _db.Products
-                .Include(p => p.ProductInventories)
-                !.ThenInclude(pi => pi.Inventory)
-                .FirstOrDefaultAsync(p => p.ProductId == product.ProductId);
+            var prod = await _productRepository.GetProductByIdAsync(product.ProductId);
+            //var prod = await _db.Products
+            //    .Include(p => p.ProductInventories)
+            //    !.ThenInclude(pi => pi.Inventory)
+            //    .FirstOrDefaultAsync(p => p.ProductId == product.ProductId);
 
             if (prod != null)
             {
                 foreach (var pi in prod.ProductInventories)
                 {
+                    int qtyBefore = pi.Inventory.Quantity;
                     pi.Inventory.Quantity -= quantity * pi.InventoryQuantity;
+
+                    this._db.InventoryTransactions.Add(new InventoryTransaction
+                    {
+                        ProductionNumber = productionNumber,
+                        InventoryId = pi.Inventory.InventoryId,
+                        QuantityBefore = qtyBefore,
+                        ActivityType = InventoryTransactionType.ProduceProduct,
+                        QuantityAfter = pi.Inventory.Quantity ,
+                        TransactionDate = DateTime.Now,
+                        DoneBy = doneBy,
+                        UnitPrice = price
+                    });
                 }
             }
 

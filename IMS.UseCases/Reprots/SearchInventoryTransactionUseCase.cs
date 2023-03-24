@@ -20,9 +20,9 @@ namespace IMS.UseCases.Reprots
 
         public async Task<IEnumerable<InventoryTransaction>> ExecuteAsync(
             string inventoryName,
-            DateTime dateForm,
-            DateTime dateTo,
-            InventoryTransactionType transactionType)
+            DateTime? dateForm,
+            DateTime? dateTo,
+            InventoryTransactionType? transactionType)
         {
             return await _inventoryTransactionRepository
                 .GetInventoryTransactionsAsync(inventoryName, dateForm, dateTo,
