@@ -28,8 +28,10 @@ namespace IMS.WebApp
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
                                    throw new InvalidOperationException(
                                        "Connection string 'DefaultConnection' not found.");
+
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
+
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -40,7 +42,12 @@ namespace IMS.WebApp
                     RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 
             //add DataContext
-            builder.Services.AddDbContext<IMSContext>(options => { options.UseInMemoryDatabase("IMS"); });
+            builder.Services.AddDbContext<IMSContext>(options
+                =>
+            {
+                var connectionString = builder.Configuration.GetSection("ConnectionStrings")["defaultConnection"];
+                options.UseSqlServer(connectionString);
+            });
 
             //DI use case
             builder.Services.AddTransient<IViewInventoriesByNameUseCase, ViewInventoriesByNameUseCase>();
@@ -70,12 +77,12 @@ namespace IMS.WebApp
 
             var app = builder.Build();
 
-            var scope = app.Services.CreateScope();
-            var imsContext = scope.ServiceProvider.GetRequiredService<IMSContext>();
+            //var scope = app.Services.CreateScope();
+            //var imsContext = scope.ServiceProvider.GetRequiredService<IMSContext>();
 
             //EF core in memory test
-            imsContext.Database.EnsureDeleted();
-            imsContext.Database.EnsureCreated();
+            //imsContext.Database.EnsureDeleted();
+            //imsContext.Database.EnsureCreated();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

@@ -22,7 +22,7 @@ namespace IMS.Plugins.EFCore
         public async Task<List<Product>> GetProductsByNameAsync(string name = "")
         {
             return await _db.Products.Where(p =>
-                    (p.ProductName.Contains(name, StringComparison.OrdinalIgnoreCase) ||
+                    (p.ProductName.ToLower().IndexOf(name.ToLower()) >= 0 ||
                      string.IsNullOrWhiteSpace(name)) &&
                     p.IsActive == true)
                 .ToListAsync();
@@ -32,7 +32,7 @@ namespace IMS.Plugins.EFCore
         {
             //To prevent to add same product
             if (_db.Products.Any(p =>
-                    p.ProductName.Equals(product.ProductName, StringComparison.OrdinalIgnoreCase))) return;
+                    p.ProductName.ToLower() == product.ProductName.ToLower())) return;
 
             await this._db.Products.AddAsync(product);
             await this._db.SaveChangesAsync();
@@ -64,9 +64,8 @@ namespace IMS.Plugins.EFCore
 
         public async Task UpdateProductAsync(Product product)
         {
-            var res = _db.Products.Any(x => x
-                .ProductName
-                .Equals(product.ProductName, StringComparison.OrdinalIgnoreCase));
+            var res = _db.Products.Any(p =>
+                p.ProductName.ToLower() == product.ProductName.ToLower());
 
             if (res == true)
             {
