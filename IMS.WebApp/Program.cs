@@ -58,8 +58,8 @@ namespace IMS.WebApp
                 .AddTransient<IValidateEnoughInventoriesForProducingUseCase,
                     ValidateEnoughInventoriesForProducingUseCase>();
             builder.Services.AddTransient<IProduceProductUseCase, ProduceProductUseCase>();
-            builder.Services.AddTransient<ISearchInventoryTransactionUseCase ,SearchInventoryTransactionUseCase>();
-
+            builder.Services.AddTransient<ISearchInventoryTransactionUseCase, SearchInventoryTransactionUseCase>();
+            builder.Services.AddTransient<ISearchProductTransactionsUseCase, SearchProductTransactionsUseCase>();
 
             //DI repositories
             builder.Services.AddTransient<IInventoryRepository, InventoryRepository>();

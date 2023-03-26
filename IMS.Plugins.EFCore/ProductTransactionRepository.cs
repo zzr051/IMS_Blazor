@@ -43,7 +43,7 @@ namespace IMS.Plugins.EFCore
                         InventoryId = pi.Inventory.InventoryId,
                         QuantityBefore = qtyBefore,
                         ActivityType = InventoryTransactionType.ProduceProduct,
-                        QuantityAfter = pi.Inventory.Quantity ,
+                        QuantityAfter = pi.Inventory.Quantity,
                         TransactionDate = DateTime.Now,
                         DoneBy = doneBy,
                         UnitPrice = price
@@ -76,10 +76,35 @@ namespace IMS.Plugins.EFCore
                 QuantityAfter = product.Quantity - quantity,
                 TransactionDate = DateTime.Now,
                 DoneBy = doneBy,
-                UnitPrice = price
+                UnitPrice = price,
+                ActivityType = ProductTransactionType.SellProduct
             });
 
             await _db.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<ProductTransaction>> GetProductTransactionAsync(
+            string productName,
+            DateTime? dateForm,
+            DateTime? dateTo,
+            ProductTransactionType? transactionType)
+        {
+            if (dateTo.HasValue)
+            {
+                dateTo = dateTo.Value.AddDays(1);
+            }
+
+            var query =
+                from pt in _db.ProductTransactions
+                join prod in _db.Products on pt.ProductId equals prod.ProductId
+                where (string.IsNullOrWhiteSpace(productName) ||
+                       prod.ProductName.Contains(productName, StringComparison.OrdinalIgnoreCase)) &&
+                      (!dateForm.HasValue || pt.TransactionDate >= dateForm.Value.Date) &&
+                      (!dateTo.HasValue || pt.TransactionDate <= dateTo.Value.Date) &&
+                      (!transactionType.HasValue || pt.ActivityType == transactionType)
+                select pt;
+
+            return await query.Include(x => x.Product).ToListAsync();
         }
     }
 }
